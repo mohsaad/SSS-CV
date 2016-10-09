@@ -3,13 +3,13 @@ Student Space Systems Computer Vision
 
 Packages to install (use ```conda install <package name>```)
 
-numpy
+* numpy
 
-scipy
+* scipy
 
-matplotlib
+* matplotlib
 
-git
+* git
 
 To install opencv, run in your conda environment:
 ```bash
