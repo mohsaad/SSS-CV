@@ -32,7 +32,8 @@ def morphological_smoothing(img):
 Implements edge detection on current image.
 '''
 def edge_detection(img):
-	pass
+	sobelX = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize = 5)
+	return sobelX
 
 '''
 Dilation: dilates the image in order to make edges more visible.
