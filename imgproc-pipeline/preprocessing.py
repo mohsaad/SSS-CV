@@ -23,6 +23,25 @@ Implements a morphological smoothing of the image.
 First step in the preprocessing pipeline	
 '''
 def morphological_smoothing(img):
+	#seperate rgb of img
+	red = img[:,:,2]
+	green = img[:,:,1]
+	blue = img[:,:,0]
+
+	#5x5 elliptical shaped smoothing element
+	kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+
+	#open the three separate images
+	openRed = cv2.morphologyEx(red, cv2.MORPH_OPEN, kernel)
+	openGreen = cv2.morphologyEx(green, cv2.MORPH_OPEN, kernel)
+	openBlue = cv2.morphologyEx(blue, cv2.MORPH_OPEN, kernel)
+
+	#close the three separate images
+	finalRed = cv2.morphologyEx(red, cv2.MORPH_CLOSE, kernel)
+	finalGreen = cv2.morphologyEx(green, cv2.MORPH_CLOSE, kernel)
+	finalBlue = cv2.morphologyEx(blue, cv2.MORPH_CLOSE, kernel)
+
+	final = cv2.merge([finalBlue, finalGreen, finalRed])
 	pass
 
 '''
