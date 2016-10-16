@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-src = cv2.imread('pic.png')
+src = cv2.imread('Horizon-2.jpg')
 
 #cv2.split is apparently very slow, so if we want to do this real time we probably want to use numpy indexing
 #b, g, r = cv2.split('src')
@@ -29,6 +29,8 @@ plt.subplot(332),plt.imshow(src,'gray'),plt.title('Original')
 plt.subplot(334),plt.imshow(blue,'gray'),plt.title('Blue')
 plt.subplot(335),plt.imshow(green,'gray'),plt.title('Green')
 plt.subplot(336),plt.imshow(red,'gray'),plt.title('Red')
-plt.subplot(338),plt.imshow(final,'gray'),plt.title('FINAL')
+plt.subplot(337),plt.imshow(finalBlue,'gray'),plt.title('smooth blue')
+plt.subplot(338),plt.imshow(finalGreen,'gray'),plt.title('smooth green')
+plt.subplot(339),plt.imshow(finalRed,'gray'),plt.title('smooth red')
 
 plt.show()
