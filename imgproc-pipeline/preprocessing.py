@@ -45,6 +45,28 @@ def dilation(img):
 
 
 '''
+The first part of the pipeline. Splits into R,G,B channels, performs
+morphological smoothing, and edge detection, and dilation
+'''
+def process_channel(img):
+	smooth = morphological_smoothing(img)
+	edges = edge_detection(smooth)
+	dilated = dilation(edges)
+
+	return dilated
+
+
+
+def split_and_recombine(img):
+	# Use all three color channels
+	colors = []
+	for i in range(img.shape[2]):
+		colors.append(process_channel(img[:,:,i]))
+	
+			
+
+
+'''
 main method, use to test.
 '''
 
