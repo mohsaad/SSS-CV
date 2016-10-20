@@ -63,7 +63,12 @@ def split_and_recombine(img):
 	for i in range(img.shape[2]):
 		colors.append(process_channel(img[:,:,i]))
 	
-			
+def merge(colors):
+	row, cols, channels = colors.shape
+	merged_image = colors[0]
+	for i in range(1,channels):
+		merged_image = cv2.bitwise_and(merged_image, colors[i])
+	return merged_image
 
 
 '''
