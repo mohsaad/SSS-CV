@@ -71,12 +71,36 @@ def merge(colors):
 		merged_image[:,:] = cv2.bitwise_and(merged_image, colors[:,:,i])
 	return merged_image
 
+def hough(edges):
+	lines = cv2.HoughLines(edges.astype('uint8'),1,np.pi/180,200)
+	print(lines.shape)
+	#print(lines)
+	for i in range(0, lines.shape[0]):
+		rho = lines[i,0,0]
+		theta = lines[i,0,1]
+		a = np.cos(theta)
+		b = np.sin(theta)
+		x0 = a*rho
+		y0 = b*rho
+		x1 = int(x0 + 1000*(-b))
+		y1 = int(y0 + 1000*(a))
+		x2 = int(x0 - 1000*(-b))
+		y2 = int(y0 - 1000*(a))
+
+		slope = float(y2-y1)/(x2 - x1)
+
+		if(abs(slope) < 0.01):
+			cv2.line(edges,(x1,y1),(x2,y2),128,2)
+	return edges
+
 
 def pipeline(pathname):
 	image = read_image(pathname)
 	colors = split_and_recombine(image)
 	masked_image = merge(colors)
-	processed_image = dilation(masked_image, (3,3))
+	dilated_image = dilation(masked_image, (3,3))
+	print(dilated_image)
+	processed_image = hough(dilated_image)
 
 	return processed_image
 
