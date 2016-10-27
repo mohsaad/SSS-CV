@@ -10,7 +10,6 @@
 import numpy as np
 import cv2
 
-
 '''
 read_image - reads an image inro our current memory.
 '''
@@ -110,9 +109,24 @@ main method, use to test.
 
 def main():
 	import sys
-	image = pipeline(sys.argv[1])
-	image[:,:] *= 255
-	cv2.imwrite(sys.argv[2], image)
+	cap = cv2.VideoCapture(sys.argv[1])
+	#image = pipeline(sys.argv[1])
+	#image[:,:] *= 255
+
+	if cap.isOpened():
+		print "Video opened succesfully"
+	else : 
+		print "Video did not open succesfully"
+
+	while(cap.isOpened()):
+		ret, frame = cap.read()
+		image = pipeline(frame)
+		cv2.imshow("image", image)
+		if cv2.waitKey(25):
+			break
+
+	cap.release()
+	#cv2.imwrite(sys.argv[2], image)
 
 '''
 If this python script is run by itself, run the main method.
