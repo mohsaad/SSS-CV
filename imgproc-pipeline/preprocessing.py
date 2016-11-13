@@ -110,26 +110,23 @@ main method, use to test.
 
 def main():
 	import sys
-	cap = cv2.VideoCapture(sys.argv[1])
-	#image = pipeline(sys.argv[1])
-	#image[:,:] *= 255
-
+	#cap = cv2.VideoCapture(sys.argv[1])
+	image = pipeline(sys.argv[1])
+	image[:,:] *= 255
+	'''
 	if cap.isOpened():
 		print "Video opened succesfully"
 	else : 
 		print "Video did not open succesfully"
 
 	while(cap.isOpened()):
-		ret, frame = cap.read()
-		if ret == -1:
-			break
-		image = pipeline(frame)
-		cv2.imshow("frame", frame)
-		cv2.imshow("cv", image)
-		cv2.waitKey(1)
-
+			ret, frame = cap.read()
+			image = pipeline(frame)
+			cv2.imshow("image", image)
+			cv2.waitKey(0)
 	cap.release()
-	#cv2.imwrite(sys.argv[2], image)
+	'''
+	cv2.imwrite(sys.argv[2], image)
 
 '''
 If this python script is run by itself, run the main method.

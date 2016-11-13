@@ -6,7 +6,7 @@ import time
 t1 = time.time()
 
 img = cv2.imread("Horizon-2.jpg")
-Z = img.reshape((-1,3))
+Z = img.reshape((img.shape[0] * img.shape[1],3))
 
 # convert to np.float32
 Z = np.float32(Z)
