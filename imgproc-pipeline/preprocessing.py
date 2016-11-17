@@ -73,7 +73,7 @@ def merge(colors):
 def hough(edges):
 	lines = cv2.HoughLines(edges.astype('uint8'),1,np.pi/180,200)
 	# print(lines.shape)
-
+	line_img = np.zeros(edges.shape)
 	if lines is None:
 		return edges
 
@@ -91,8 +91,8 @@ def hough(edges):
 
 		# slope = float(y2-y1)/(x2 - x1)
 
-		cv2.line(edges,(x1,y1),(x2,y2),128,2)
-	return edges
+		cv2.line(line_img,(x1,y1),(x2,y2),128,2)
+	return line_img
 
 
 def kmeans(img):
@@ -103,7 +103,7 @@ def kmeans(img):
 
 	# define criteria, number of clusters(K) and apply kmeans()
 	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-	K = 2
+	K = 3
 	ret,label,center = cv2.kmeans(Z,K,None,criteria,10,cv2.KMEANS_RANDOM_CENTERS)
 
 	# Now convert back into uint8, and make original image
@@ -116,6 +116,7 @@ def kmeans(img):
 def pipeline(image):
 	# image = read_image(pathname)
 	image = kmeans(image)
+	cv2.imshow('kmeans', image[:,:,0])
 	colors = split_and_recombine(image)
 	image = merge(colors)
 	image = dilation(image, (3,3))
@@ -130,21 +131,22 @@ main method, use to test.
 def main():
 	import sys
 	cap = cv2.VideoCapture(sys.argv[1])
-	image = pipeline(sys.argv[1])
-	image[:,:] *= 255
-	'''
+	# image = pipeline(sys.argv[1])
+	# image[:,:] *= 255
+
 	if cap.isOpened():
 		print "Video opened succesfully"
 	else : 
 		print "Video did not open succesfully"
-
+	cap.set(cv2.CAP_PROP_POS_MSEC, 1000*9)
 	while(cap.isOpened()):
 			ret, frame = cap.read()
 			image = pipeline(frame)
-			cv2.imshow("image", image)
-			cv2.waitKey(0)
+			cv2.imshow("original", frame)
+			cv2.imshow("processed", image)
+			cv2.waitKey(10)
 	cap.release()
-	'''
+
 	cv2.imwrite(sys.argv[2], image)
 
 '''
