@@ -9,7 +9,7 @@ def SdotBreakdown(positionVector):
     return s1, s2
 
 #This function computes the image jacobian matrix given inputs x,y,z (u, v, z) and the feature value matrix S
-def VisualServo(x,y,z,s1,s2):
+def VisualServo(s1,s2,x,y,z):
     L = np.matrix([[(1.0/z), 0.0, -(x/z), -x*y, (1.0 + x**2), -y], [0.0, (1.0/z), -(y/z), -(1.0 + y**2), x*y, x]])
     S = np.matrix([[s1],[s2]])
     return L, S
@@ -24,4 +24,6 @@ def SolveVisualServo(L,S):
     return Vc
 
 
-
+L,S = VisualServo(69.1, 565.06, 349.06, 772.416, 1.0)
+print(L)
+print(S)
