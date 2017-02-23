@@ -1,11 +1,8 @@
 #!/usr/bin/env python
+
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-
-
-import numpy as np
-import cv2
 
 def drawMatches(img1, kp1, img2, kp2, matches):
     """
@@ -60,8 +57,8 @@ def drawMatches(img1, kp1, img2, kp2, matches):
 
 def import_images():
 	#import images
-	downorig = cv2.imread("down.jpg", cv2.IMREAD_GRAYSCALE)
-	uporig = cv2.imread("up.jpg", cv2.IMREAD_GRAYSCALE)
+	downorig = cv2.imread("../imgs/down.jpg", cv2.IMREAD_GRAYSCALE)
+	uporig = cv2.imread("../imgs/up.jpg", cv2.IMREAD_GRAYSCALE)
 
 	#resize images to 1/4 of size
 	height, width = uporig.shape
@@ -110,6 +107,4 @@ def position_vector():
 		posv[i][2] = x2
 		posv[i][3] = y2
 		posv[i][4] = 1
-	print(posv)
-
-position_vector()
+        return posv
