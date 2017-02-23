@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.linalg import inv
-import cv
+import cv2
 
 #This function takes a position vector and breaks it down into its individual components
 def SdotBreakdown(positionVector):
@@ -24,6 +24,6 @@ def SolveVisualServo(L,S):
     return Vc
 
 
-L,S = VisualServo(69.1, 565.06, 349.06, 772.416, 1.0)
-print(L)
-print(S)
+# L1,S1 = VisualServo(69.1, 565.06, 349.06, 772.416, 1.)0
+# print(L)
+# print(S)
