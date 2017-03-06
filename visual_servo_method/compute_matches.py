@@ -44,31 +44,29 @@ def drawMatches(img1, kp1, img2, kp2, matches):
         # radius 4
         # colour blue
         # thickness = 1
-        cv2.circle(out, (int(x1),int(y1)), 4, (255, 0, 0), 3)   
-        cv2.circle(out, (int(x2)+cols1,int(y2)), 4, (255, 0, 0), 3)
+        cv2.circle(out, (int(x1),int(y1)), 4, (255, 0, 0), 1)   
+        cv2.circle(out, (int(x2)+cols1,int(y2)), 4, (255, 0, 0), 1)
 
         # Draw a line in between the two points
         # thickness = 1
         # colour blue
-        cv2.line(out, (int(x1),int(y1)), (int(x2)+cols1,int(y2)), (0, 255, 0), 5)
+        cv2.line(out, (int(x1),int(y1)), (int(x2)+cols1,int(y2)), (0, 255, 0), 1)
     # Also return the image if you'd like a copy
     return out
 
 
 def import_images():
 	#import images
-	downorig = cv2.imread("../imgs/down.jpg", cv2.IMREAD_GRAYSCALE)
-	uporig = cv2.imread("../imgs/up.jpg", cv2.IMREAD_GRAYSCALE)
-
+	downorig = cv2.imread("../imgs/desk_1_1.png", cv2.IMREAD_GRAYSCALE)
+	uporig = cv2.imread("../imgs/desk_1_2.png", cv2.IMREAD_GRAYSCALE)
+	depthmap = cv2.imread("../imgs/desk_1_2_depth.png", cv2.IPL_DEPTH_16U)
 	#resize images to 1/4 of size
-	height, width = uporig.shape
-	up = cv2.resize(uporig, (int(height * .25), int(width * .25)))
-	down = cv2.resize(downorig, (int(height * .25), int(width * .25)))
-	return up, down
+	#height, width = uporig.shape
+	#up = cv2.resize(uporig, (int(hei.ght * .25), int(width * .25)))
+	#down = cv2.resize(downorig, (int(height * .25), int(width * .25)))
+	return uporig, downorig, depthmap
 
-def find_keypoints():
-	up, down = import_images()
-
+def find_keypoints(up, down):
 	#create the ORB object
 	orb = cv2.ORB()
 
@@ -84,27 +82,53 @@ def find_keypoints():
 
 	# Sort them in the order of their distance.
 	matches = sorted(matches, key = lambda x:x.distance)
-	return ft1, ft2, matches
+
+	up, down, depth = import_images()
+
+	#filtered matches
+	filtmat = []
+	for mat in matches:
+		#get indices
+		index1 = mat.queryIdx
+		index2 = mat.trainIdx
+
+		#get positions
+		(x1, y1) = ft1[index1].pt
+		(x2, y2) = ft2[index2].pt
+
+		#check depth
+		z2 = depth[int(round(y2)), int(round(x2))]
+		if z2 != 0 :
+			filtmat.append(mat)
+	return ft1, ft2, filtmat
 
 def position_vector():
 	posv = np.zeros((5,5))
-	kp1, kp2, matches = find_keypoints()
-	for i in range(0, 5):
+	up, down, depth = import_images()
+	kp1, kp2, matches = find_keypoints(up, down)
 
+	#draw the matches
+	'''
+	cv2.imshow("out", drawMatches(up, kp1, down, kp2, matches))
+	cv2.waitKey(0)
+	'''
+	for i in range(0, 5):
 		#find the kp indices
 		idx1 = matches[i].queryIdx
 		idx2 = matches[i].trainIdx
 
 		#get positions
-		(x1, y1) = kp1[idx1].pt
-		(x2, y2) = kp2[idx2].pt
+		(u1, v1) = kp1[idx1].pt
+		(u2, v2) = kp2[idx2].pt
+		z2 = depth[int(round(v2)), int(round(u2))]
 
 		#velocity
-		udot = x2 - x1
-		vdot = y2 - y1
+		udot = u2 - u1
+		vdot = v2 - v1
+
 		posv[i][0] = udot
 		posv[i][1] = vdot
-		posv[i][2] = x2
-		posv[i][3] = y2
-		posv[i][4] = 1
-        return posv
+		posv[i][2] = u2
+		posv[i][3] = v2
+		posv[i][4] = z2
+	return posv
